@@ -1,5 +1,7 @@
 import face_recognition
 import numpy as np
+import os
+import cv2
 
 
 def load_known_faces():
@@ -42,4 +44,4 @@ def recognize_faces(known_faces, known_names):
             break
     
     cam.release()
-    cv2.destroyAllWindows()
+    cv2.destroyAllWindows()go
