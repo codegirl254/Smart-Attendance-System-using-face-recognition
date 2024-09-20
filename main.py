@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog
-from face_recognition import recognize_faces  # Import your face recognition function
+from  face_recognition_utils import recognize_faces  # Import your face recognition function
+from face_recognition_utils import load_known_faces
 from attendance import mark_attendance  # Import your attendance function
 
 # Function to start face recognition
 def start_recognition():
-    recognized_name = recognize_faces()  # Modify this to return the recognized name
+    known_faces, known_names = load_known_faces()  # Load the known faces and names
+    recognized_name = recognize_faces(known_faces, known_names)  # Pass the loaded data
     if recognized_name:
         mark_attendance(recognized_name)
         recognized_label.config(text=f"Recognized: {recognized_name}")
