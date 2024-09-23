@@ -10,7 +10,7 @@ selected_class = None
 def start_recognition():
     global selected_class
     if selected_class:
-        known_faces, known_names = load_known_faces(selected_class)
+        known_faces, known_names = load_known_faces(selected_class)  # Pass selected class to load known faces
         recognized_name = recognize_faces(known_faces, known_names)
         if recognized_name:
             # Capture the message from mark_attendance

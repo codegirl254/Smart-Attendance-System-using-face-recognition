@@ -4,19 +4,30 @@ import numpy as np
 import os
 import cv2
 
-
-def load_known_faces():
+# Function to load known faces from specific class folders
+def load_known_faces(class_type=None):
     known_faces = []
     known_names = []
-    
-    for filename in os.listdir('known_faces'):
-        image = face_recognition.load_image_file(f'known_faces/{filename}')
+
+    # Set folder path based on class type
+    folder_path = 'known_faces'
+    if class_type == "Cyber Security":
+        folder_path = 'known_faces/cyber_security'
+    elif class_type == "Data Analytics":
+        folder_path = 'known_faces/data_analytics'
+    elif class_type == "Instructor":
+        folder_path = 'known_faces/instructors'
+
+    # Load images from the respective folder
+    for filename in os.listdir(folder_path):
+        image = face_recognition.load_image_file(f'{folder_path}/{filename}')
         encoding = face_recognition.face_encodings(image)[0]
         known_faces.append(encoding)
-        known_names.append(filename.split('.')[0])  # Use the filename as the name
-    
+        known_names.append(filename.split('.')[0])  # Use filename as the name
+
     return known_faces, known_names
 
+# Function to recognize faces from a camera feed
 def recognize_faces(known_faces, known_names):
     cam = cv2.VideoCapture(0)
     ret, frame = cam.read()
