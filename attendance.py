@@ -9,7 +9,7 @@ def mark_attendance(name, class_type):
     elif class_type == "Data Analytics":
         file_name = "data_analytics_attendance.xlsx"
     else:
-        file_name = "instructors_attendance.xlsx"
+        return "Invalid class type."
 
     # Load existing attendance if file exists
     if os.path.exists(file_name):
@@ -38,8 +38,44 @@ def mark_attendance(name, class_type):
     else:
         # Add a new row for the new attendee and mark attendance
         new_row = pd.DataFrame({"Name": [name], date_string: [time_string]})
-        df = pd.concat([df, new_row], ignore_index=True)  # Replacing append with pd.concat
+        df = pd.concat([df, new_row], ignore_index=True)
 
     # Save the updated DataFrame to the Excel file
     df.to_excel(file_name, index=False)
     return f"Attendance marked for {name}."
+
+def remove_attendance(name, class_type):
+    # Select the correct file based on the class type
+    if class_type == "Cyber Security":
+        file_name = "cyber_security_attendance.xlsx"
+    elif class_type == "Data Analytics":
+        file_name = "data_analytics_attendance.xlsx"
+    else:
+        return "Invalid class type."
+
+    # Check if file exists
+    if not os.path.exists(file_name):
+        return "Attendance file not found."
+
+    # Load the attendance data
+    df = pd.read_excel(file_name)
+
+    # Check if the name exists in the attendance
+    if name in df['Name'].values:
+        # Remove the attendance entry
+        df = df[df['Name'] != name]
+        df.to_excel(file_name, index=False)
+        return f"Removed attendance for {name} from {class_type}."
+    else:
+        return f"{name} not found in {class_type} attendance."
+
+def download_excel(class_type):
+    # Select the correct file based on the class type
+    if class_type == "Cyber Security":
+        file_name = "cyber_security_attendance.xlsx"
+    elif class_type == "Data Analytics":
+        file_name = "data_analytics_attendance.xlsx"
+    else:
+        return None
+
+    return file_name

@@ -19,11 +19,17 @@ def load_known_faces(class_type=None):
         folder_path = 'known_faces/instructors'
 
     # Load images from the respective folder
-    for filename in os.listdir(folder_path):
-        image = face_recognition.load_image_file(f'{folder_path}/{filename}')
-        encoding = face_recognition.face_encodings(image)[0]
-        known_faces.append(encoding)
-        known_names.append(filename.split('.')[0])  # Use filename as the name
+    for foldername in os.listdir(folder_path):
+        subfolder_path = os.path.join(folder_path, foldername)  # Get the full path to the subfolder
+        if os.path.isdir(subfolder_path):  # Check if it is a directory
+            for filename in os.listdir(subfolder_path):
+                # Check for valid image files (e.g., .jpg, .png)
+                if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    image_path = os.path.join(subfolder_path, filename)  # Get full path to the image
+                    image = face_recognition.load_image_file(image_path)
+                    encoding = face_recognition.face_encodings(image)[0]
+                    known_faces.append(encoding)
+                    known_names.append(foldername)  # Use folder name as the name
 
     return known_faces, known_names
 
