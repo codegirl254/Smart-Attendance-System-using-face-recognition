@@ -5,6 +5,8 @@ from face_recognition_utils import load_known_faces, recognize_faces
 import os
 import shutil
 import time
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Global variable to store selected class
 selected_class = None
@@ -110,38 +112,56 @@ def show_admin_interface():
         messagebox.showerror("Error", "Invalid admin credentials.")
 
 # Function for the admin dashboard where they can download attendance
+# Function to show the admin dashboard with report and download options
 def show_admin_dashboard():
     for widget in root.winfo_children():
         widget.pack_forget()
 
-    class_label = tk.Label(root, text="Admin Dashboard", font=("Helvetica", 20, "bold"))
-    class_label.pack(pady=20)
+    dashboard_label = tk.Label(root, text="Admin Dashboard", font=("Helvetica", 20, "bold"), bg="#3F51B5", fg="white")
+    dashboard_label.pack(pady=20, fill=tk.X)
 
-    # Frame for Attendance Management
-    attendance_frame = tk.Frame(root)
-    attendance_frame.pack(pady=20)
-
-    # Download buttons for attendance sheets
-    cyber_button = tk.Button(attendance_frame, text="Download Cyber Security Attendance", command=lambda: download_attendance("Cyber Security"), font=("Helvetica", 14), bg="#2196F3", fg="white", width=30)
-    cyber_button.grid(row=0, column=0, padx=10, pady=10)
-
-    data_button = tk.Button(attendance_frame, text="Download Data Analytics Attendance", command=lambda: download_attendance("Data Analytics"), font=("Helvetica", 14), bg="#2196F3", fg="white", width=30)
-    data_button.grid(row=1, column=0, padx=10, pady=10)
-
-    # Frame for Reports
-    report_frame = tk.Frame(root)
+    # Frame for reports and downloads
+    report_frame = tk.Frame(root, padx=20, pady=20)
     report_frame.pack(pady=20)
 
-    report_label = tk.Label(report_frame, text="Attendance Reports", font=("Helvetica", 18, "bold"))
-    report_label.pack(pady=10)
+    # Section label for Downloads
+    downloads_label = tk.Label(report_frame, text="Download Attendance", font=("Helvetica", 16, "bold"))
+    downloads_label.pack(pady=10)
 
-    # Sample report button (add more report buttons as needed)
-    view_report_button = tk.Button(report_frame, text="View Full Attendance Report", command=view_full_report, font=("Helvetica", 14), bg="#4CAF50", fg="white", width=30)
-    view_report_button.pack(pady=10)
+    # Button to download attendance for Cyber Security
+    cyber_button = tk.Button(report_frame, text="Download Cyber Security Attendance", command=lambda: download_attendance("Cyber Security"), font=("Helvetica", 12), bg="#4CAF50", fg="white", width=30)
+    cyber_button.pack(pady=5)
+
+    # Button to download attendance for Data Analytics
+    data_button = tk.Button(report_frame, text="Download Data Analytics Attendance", command=lambda: download_attendance("Data Analytics"), font=("Helvetica", 12), bg="#4CAF50", fg="white", width=30)
+    data_button.pack(pady=5)
+
+    # Section label for Reports
+    reports_label = tk.Label(report_frame, text="Reports", font=("Helvetica", 16, "bold"))
+    reports_label.pack(pady=10)
+
+    # Button to view attendance chart
+    view_chart_button = tk.Button(report_frame, text="View Attendance Chart", command=show_attendance_chart, font=("Helvetica", 14), bg="#FF9800", fg="white", width=30)
+    view_chart_button.pack(pady=5)
 
     # Back button
-    back_button = tk.Button(root, text="Back to Main Menu", command=show_main_menu, font=("Helvetica", 12), bg="lightgray")
+    back_button = tk.Button(root, text="Back to Main Menu", command=show_main_menu, font=("Helvetica", 12), bg="#F44336", fg="white", width=20)
     back_button.pack(pady=20)
+
+# Function to show attendance chart using Matplotlib
+def show_attendance_chart():
+    # Sample data for demonstration purposes
+    classes = ['Cyber Security', 'Data Analytics']
+    attendance_counts = [30, 25]  # You should replace this with actual data from your attendance records
+
+    plt.figure(figsize=(8, 5))
+    plt.bar(classes, attendance_counts, color=['blue', 'orange'])
+    plt.title('Attendance Counts by Class')
+    plt.xlabel('Classes')
+    plt.ylabel('Number of Students Attended')
+    plt.grid(axis='y')
+    plt.show()
+
 
 def view_full_report():
     # Placeholder for viewing reports logic
