@@ -73,7 +73,6 @@ def select_class_for_instructor(class_type):
     back_button = tk.Button(root, text="Back", command=show_instructor_dashboard, font=("Helvetica", 12), bg="lightgray")
     back_button.pack(pady=20)
 
-
 # Function to manually add attendance
 def add_attendance():
     global selected_class
@@ -162,11 +161,9 @@ def show_attendance_chart():
     plt.grid(axis='y')
     plt.show()
 
-
 def view_full_report():
     # Placeholder for viewing reports logic
     messagebox.showinfo("Report", "This feature will display the full attendance report.")
-
 
 # Function to show the student mode interface
 def show_student_mode():
@@ -202,73 +199,43 @@ def select_class_for_student(class_type):
     back_button = tk.Button(root, text="Back", command=show_student_mode, font=("Helvetica", 12))
     back_button.pack(pady=20)
 
-# Enhanced face scanning interface
 def enhance_scan_face_interface(class_type):
-    # Clear the current interface
-    for widget in root.winfo_children():
-        widget.pack_forget()
+    global selected_class
+    selected_class = class_type
+    faces_encoded, known_face_names = load_known_faces()  # Load known faces and names from your database
+    recognized_name = recognize_faces(faces_encoded, known_face_names)
 
-    # Title Label
-    title_label = tk.Label(root, text="Face Scan", font=("Helvetica", 24))
-    title_label.pack(pady=20)
-
-    # Instruction Label
-    instruction_label = tk.Label(root, text="Please look at the camera and ensure your face is fully visible.", font=("Helvetica", 12))
-    instruction_label.pack(pady=10)
-
-    # Status Message
-    status_label = tk.Label(root, text="", font=("Helvetica", 12))
-    status_label.pack(pady=10)
-
-    # Scan Button
-    scan_button = tk.Button(root, text="Start Scanning", command=lambda: scan_face_for_class(class_type, status_label), font=("Helvetica", 14), bg="#4CAF50", fg="white")
-    scan_button.pack(pady=20)
-
-    # Back Button
-    back_button = tk.Button(root, text="Back", command=show_student_mode, font=("Helvetica", 12))
-    back_button.pack(pady=20)
-
-# Function to scan face using face recognition and update attendance
-def scan_face_for_class(class_type, status_label):
-    status_label.config(text="Detecting face...")
-    root.update()  # Update the GUI
-
-    # Simulate face scanning
-    time.sleep(2)  # Simulate delay for scanning
-
-    known_faces, known_names = load_known_faces(class_type)
-    name = recognize_faces(known_faces, known_names)
-
-    if name != "Unknown":
-        message = mark_attendance(name, class_type)
+    if recognized_name:
+        message = mark_attendance(recognized_name, selected_class)
         messagebox.showinfo("Attendance", message)
     else:
-        messagebox.showerror("Error", "Face not recognized.Please try again or ask you instructor to assist you mark your attenance mannually")
-    
-    status_label.config(text="")
+        messagebox.showwarning("Warning", "Face not recognized. Attendance not marked.")
 
 # Function to show the main menu
 def show_main_menu():
     for widget in root.winfo_children():
         widget.pack_forget()
 
-    title_label = tk.Label(root, text="Attendance System", font=("Helvetica", 16, "bold"))
+    title_label = tk.Label(root, text="Attendance Management System", font=("Helvetica", 24, "bold"))
     title_label.pack(pady=20)
 
-    student_button = tk.Button(root, text="Student Mode", command=show_student_mode, font=("Helvetica", 12))
+    student_button = tk.Button(root, text="Student Mode", command=show_student_mode, font=("Helvetica", 14), bg="#4CAF50", fg="white", width=25)
     student_button.pack(pady=10)
 
-    instructor_button = tk.Button(root, text="Instructor Interface", command=show_instructor_interface, font=("Helvetica", 12, "bold"), bg="blue", fg="white")
+    instructor_button = tk.Button(root, text="Instructor Login", command=show_instructor_interface, font=("Helvetica", 14), bg="#2196F3", fg="white", width=25)
     instructor_button.pack(pady=10)
 
-    admin_button = tk.Button(root, text="Admin Interface", command=show_admin_interface, font=("Helvetica", 12, "bold"), bg="red", fg="white")
-    admin_button.pack(pady=20)
+    admin_button = tk.Button(root, text="Admin Login", command=show_admin_interface, font=("Helvetica", 14), bg="#F44336", fg="white", width=25)
+    admin_button.pack(pady=10)
 
-# Create the main application window
+    quit_button = tk.Button(root, text="Quit", command=root.quit, font=("Helvetica", 12), bg="lightgray")
+    quit_button.pack(pady=20)
+
+# Main GUI setup
 root = tk.Tk()
-root.title("Face Recognition Attendance System")
-root.geometry("500x400")
+root.title("Attendance Management System")
+root.geometry("600x500")
+
 show_main_menu()
 
-# Start the Tkinter main loop
 root.mainloop()
